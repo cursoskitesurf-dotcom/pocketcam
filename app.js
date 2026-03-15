@@ -1,12 +1,19 @@
 let localStream;
 
 async function startCamera(){
+
+  // Activar cámara en alta calidad
   localStream = await navigator.mediaDevices.getUserMedia({
     video:{ width:1920, height:1080, frameRate:30 },
     audio:true
   });
+
   document.getElementById("localVideo").srcObject = localStream;
+
+  // Crear QR
   createQR();
+
+  // Activar modo vigilancia silenciosa
   stealthMode();
 }
 
