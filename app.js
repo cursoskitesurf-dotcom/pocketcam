@@ -29,5 +29,8 @@ function createQR(){
 
 function stealthMode(){
   document.body.style.background="black";
+  // ocultamos botones pero dejamos QR visible
   document.getElementById("menu").style.display="none";
+  document.getElementById("qr").style.display="block";
+  document.getElementById("qr").style.marginTop="50px";
 }
