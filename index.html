@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PocketCam</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>PocketCam</h1>
+
+<div id="menu">
+
+<button onclick="startCamera()">Usar como cámara</button>
+
+<button onclick="viewerMode()">Ver cámara</button>
+
+</div>
+
+<video id="localVideo" autoplay playsinline></video>
+
+<video id="remoteVideo" autoplay playsinline></video>
+
+<div id="qr"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+
+<script src="app.js"></script>
+
+</body>
+</html>
