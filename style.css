@@ -18,13 +18,3 @@ video{
   max-width:600px;
   margin-top:20px;
 }
-
-#qr{
-  margin-top:50px;
-}
-
-/* Asegura que el QR sea grande y visible */
-#qr canvas {
-  width: 250px !important;
-  height: 250px !important;
-}
