@@ -1,35 +1,27 @@
 let localStream;
 let peer;
-const ROOM_SECRET = "MIROOMSECRETO123"; // Cambia esto si quieres otra clave
-const URL_SIGNAL = "wss://demo.piesocket.com/v3/channel_12345?api_key=demo"; // WebSocket para señalización demo
+const ROOM_SECRET = "MIROOMSECRETO123"; // tu clave secreta
+const URL_SIGNAL = "wss://demo.piesocket.com/v3/channel_12345?api_key=demo"; // servidor de señalización demo
 
-const btnCamera = document.getElementById("btnCamera");
-const btnViewer = document.getElementById("btnViewer");
 const localVideo = document.getElementById("localVideo");
 const remoteVideo = document.getElementById("remoteVideo");
 
-// Función modo cámara
-btnCamera.onclick = async () => {
-  await startCamera();
-  startPeer(true);
-  stealthMode();
-};
+(async function init() {
+  // Intentamos activar cámara (primer iPhone)
+  try {
+    localStream = await navigator.mediaDevices.getUserMedia({
+      video: { width:1920, height:1080, frameRate:30 },
+      audio:true
+    });
+    localVideo.srcObject = localStream;
+    stealthMode();
+    startPeer(true); // primer iPhone como cámara
+  } catch(e) {
+    console.log("No se pudo activar la cámara, quizá este es el segundo iPhone visor");
+    startPeer(false); // segundo iPhone como visor
+  }
+})();
 
-// Función modo visor
-btnViewer.onclick = () => {
-  startPeer(false);
-};
-
-// Activar cámara
-async function startCamera() {
-  localStream = await navigator.mediaDevices.getUserMedia({
-    video: { width:1920, height:1080, frameRate:30 },
-    audio:true
-  });
-  localVideo.srcObject = localStream;
-}
-
-// Configuración WebRTC usando Simple-Peer
 function startPeer(isInitiator) {
   peer = new SimplePeer({
     initiator: isInitiator,
@@ -37,31 +29,20 @@ function startPeer(isInitiator) {
     stream: isInitiator ? localStream : null
   });
 
-  // Enviar señal a WebSocket
   const ws = new WebSocket(URL_SIGNAL);
-  ws.onopen = () => {
-    console.log("Conectado al servidor de señalización");
-  };
-
-  ws.onmessage = async (msg) => {
+  ws.onopen = () => console.log("Conectado al servidor de señalización");
+  ws.onmessage = msg => {
     const data = JSON.parse(msg.data);
-    if (data.room !== ROOM_SECRET) return; // solo aceptar nuestro room
-    if (data.signal) peer.signal(data.signal);
+    if(data.room !== ROOM_SECRET) return;
+    if(data.signal) peer.signal(data.signal);
   };
 
-  peer.on("signal", data => {
-    // enviar señal al servidor
-    ws.send(JSON.stringify({ room: ROOM_SECRET, signal: data }));
-  });
-
-  peer.on("stream", stream => {
-    // mostrar vídeo remoto
-    remoteVideo.srcObject = stream;
-  });
+  peer.on("signal", data => ws.send(JSON.stringify({ room: ROOM_SECRET, signal: data })));
+  peer.on("stream", stream => remoteVideo.srcObject = stream);
 }
 
-// Modo vigilancia silenciosa
 function stealthMode(){
   document.body.style.background="black";
-  document.getElementById("menu").style.display="none";
+  localVideo.style.width="100%";
+  remoteVideo.style.width="100%";
 }
