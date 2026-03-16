@@ -10,11 +10,13 @@ async function startCamera(){
 
   document.getElementById("localVideo").srcObject = localStream;
 
-  // Crear QR
-  createQR();
-
-  // Activar modo vigilancia silenciosa
+  // Activar modo vigilancia silenciosa primero
   stealthMode();
+
+  // Generar QR después de 500ms para asegurar que Safari renderiza bien
+  setTimeout(() => {
+    createQR();
+  }, 500);
 }
 
 function viewerMode(){
@@ -31,6 +33,7 @@ function stealthMode(){
   document.body.style.background="black";
   // ocultamos botones pero dejamos QR visible
   document.getElementById("menu").style.display="none";
-  document.getElementById("qr").style.display="block";
-  document.getElementById("qr").style.marginTop="50px";
+  const qrDiv = document.getElementById("qr");
+  qrDiv.style.display="block";
+  qrDiv.style.marginTop="50px";
 }
