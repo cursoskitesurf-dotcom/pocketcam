@@ -11,24 +11,15 @@
 <h1>PocketCam</h1>
 
 <div id="menu">
-  <button onclick="startCamera()">Usar como cámara</button>
-  <button onclick="viewerMode()">Ver cámara</button>
+  <button id="btnCamera">Usar como cámara</button>
+  <button id="btnViewer">Ver cámara</button>
 </div>
 
-<video id="localVideo" autoplay playsinline></video>
+<video id="localVideo" autoplay playsinline muted></video>
 <video id="remoteVideo" autoplay playsinline></video>
 
-<div id="qr"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-peer@9.11.1/simplepeer.min.js"></script>
 <script src="app.js"></script>
-
-<!-- Esto activa la cámara al abrir la web -->
-<script>
-window.onload = function() {
-    startCamera();
-};
-</script>
 
 </body>
 </html>
